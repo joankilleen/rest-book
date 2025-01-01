@@ -1,5 +1,6 @@
 package org.agoncal.quarkus.starting;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Path;
@@ -8,29 +9,35 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Optional;
 
+import org.jboss.logging.Logger;
+
 @Path("/api/books")
 public class BookResource {
+
+    @Inject
+    BookRepository repository;
+
+    @Inject
+    Logger logger;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Book> getAllBooks() {
-        return List.of(
-            new Book(1, "Understanding Quarkus", "Eejit", 2020, "IT"),
-            new Book (2, "Joan's novel", "Joan", 1995, "Literature")
-        );
+        logger.info("Returns all books");
+        return repository.getAllBooks();
     }
 
     @GET
     @Path("/count")
     @Produces( MediaType.TEXT_PLAIN)
     public int getCount(){
-        return getAllBooks().size();
+        return repository.getBookCount();
     }
 
     @GET
     @Path("{id}")
     public Optional<Book> getBook(@PathParam("id") int id){
-        return getAllBooks().stream().filter(book->book.id == id).findFirst();
+        return repository.getBook(id);
     }
 
 }
