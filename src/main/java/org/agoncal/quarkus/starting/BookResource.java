@@ -1,6 +1,8 @@
 package org.agoncal.quarkus.starting;
 
 import jakarta.inject.Inject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Path;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.jboss.logging.Logger;
+
 
 @Path("/api/books")
 public class BookResource {
@@ -36,8 +39,13 @@ public class BookResource {
 
     @GET
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Optional<Book> getBook(@PathParam("id") int id){
-        return repository.getBook(id);
+        logger.info("Returning book with id " + id);
+        Optional<Book> book = repository.getBook(id);
+        Jsonb jsonb = JsonbBuilder.create();
+        logger.info(jsonb.toJson(book.get()));
+        return book;
     }
 
 }

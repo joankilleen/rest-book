@@ -1,6 +1,8 @@
 package org.agoncal.quarkus.starting;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book implements Serializable  {
     public int id;
     public String title;
     public String author;
@@ -14,5 +16,6 @@ public class Book {
         this.yearOfPublication = yearOfPublication;
         this.genre = genre;
     }
+    
 }
 
