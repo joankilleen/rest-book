@@ -16,6 +16,18 @@ public class Book implements Serializable  {
         this.yearOfPublication = yearOfPublication;
         this.genre = genre;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Book book = (Book) obj;
+        return id == book.id && title == book.title && author == book.author && yearOfPublication == book.yearOfPublication && genre == book.genre;
+    }
+    @Override
+        public int hashCode() {
+            return title.hashCode() + id;
+        }
     
 }
 

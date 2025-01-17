@@ -23,11 +23,15 @@ public class BookResource {
     @Inject
     Logger logger;
 
+    Jsonb jsonb = JsonbBuilder.create();
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Book> getAllBooks() {
         logger.info("Returns all books");
-        return repository.getAllBooks();
+        List<Book> books = repository.getAllBooks();
+        logger.info(jsonb.toJson(books));
+        return books;
     }
 
     @GET
@@ -43,7 +47,7 @@ public class BookResource {
     public Optional<Book> getBook(@PathParam("id") int id){
         logger.info("Returning book with id " + id);
         Optional<Book> book = repository.getBook(id);
-        Jsonb jsonb = JsonbBuilder.create();
+    
         logger.info(jsonb.toJson(book.get()));
         return book;
     }

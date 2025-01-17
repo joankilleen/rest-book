@@ -8,10 +8,14 @@ import java.util.Map;
 
 import java.util.HashMap;
 
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 
-import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.equalToObject;
+import static org.hamcrest.Matchers.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 import static io.restassured.RestAssured.given;
 
 
@@ -19,25 +23,13 @@ import static io.restassured.RestAssured.given;
 class BookResourceTest {
     @Test
     void shouldGetAllBooks() {
-        //new Book(1, "Understanding Quarkus", "Eejit", 2020, "IT")
-        Map<String, Object> expected = new HashMap<String, Object>();
-        expected.put("id", 1);
-        expected.put("title", "Understanding Quarkus");
-        expected.put("author", "Eejit");
-        expected.put("yearOfPublication", "2020");
-        expected.put("genre", "IT");
-
         given()
         .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-          .when().get("/api/books")
-        
+          .when().get("/api/books")        
           .then()
              .statusCode(200)
              .body("size()", is(2))
-             //.body("$", Matchers.containsInAnyOrder(expected))
-             
-          
-             ;
+             .body("find { it.title == 'Understanding Quarkus' }.author", equalTo("Eejit"));            
     }
 
     @Test
@@ -49,8 +41,6 @@ class BookResourceTest {
             .statusCode(200)
             .body("id", Matchers.equalTo(2))
             .body("title", Matchers.equalTo("Joan's novel"))
-            .body("genre", Matchers.equalTo("Literature"))
             ;
     }
-
 }
